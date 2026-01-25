@@ -1,0 +1,279 @@
+{
+  "version": "1.0.0",
+  "name": "Task Management MCP Tools",
+  "description": "MCP tools for AI-powered task management system",
+  "tools": [
+    {
+      "name": "list_tasks",
+      "description": "Retrieve all tasks for the authenticated user, optionally filtered by category",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_token": {
+            "type": "string",
+            "description": "JWT session token for authentication and user identification",
+            "format": "jwt"
+          },
+          "category_filter": {
+            "type": "string",
+            "description": "Optional category to filter tasks by (e.g., 'Work', 'Personal', 'General')"
+          }
+        },
+        "required": ["session_token"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the operation completed successfully"
+          },
+          "tasks": {
+            "type": "array",
+            "description": "List of tasks retrieved",
+            "items": {
+              "$ref": "#/definitions/Task"
+            }
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if operation failed"
+          }
+        },
+        "required": ["success"]
+      },
+      "authentication": "required",
+      "rateLimit": {
+        "requestsPerMinute": 60
+      }
+    },
+    {
+      "name": "create_task",
+      "description": "Create a new task for the authenticated user",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_token": {
+            "type": "string",
+            "description": "JWT session token for authentication and user identification",
+            "format": "jwt"
+          },
+          "title": {
+            "type": "string",
+            "description": "Task title",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional task description or details",
+            "maxLength": 5000,
+            "default": ""
+          },
+          "category": {
+            "type": "string",
+            "description": "Task category (e.g., 'Work', 'Personal', 'General')",
+            "maxLength": 100,
+            "default": "General"
+          }
+        },
+        "required": ["session_token", "title"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the operation completed successfully"
+          },
+          "task": {
+            "$ref": "#/definitions/Task",
+            "description": "Created task with all fields populated"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if operation failed"
+          }
+        },
+        "required": ["success"]
+      },
+      "authentication": "required",
+      "rateLimit": {
+        "requestsPerMinute": 30
+      }
+    },
+    {
+      "name": "toggle_status",
+      "description": "Toggle the completion status of a task (Done ↔ Pending)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_token": {
+            "type": "string",
+            "description": "JWT session token for authentication and user identification",
+            "format": "jwt"
+          },
+          "task_id": {
+            "type": "integer",
+            "description": "ID of the task to toggle",
+            "minimum": 1
+          }
+        },
+        "required": ["session_token", "task_id"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the operation completed successfully"
+          },
+          "task": {
+            "$ref": "#/definitions/Task",
+            "description": "Updated task with new completion status"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if operation failed"
+          }
+        },
+        "required": ["success"]
+      },
+      "authentication": "required",
+      "rateLimit": {
+        "requestsPerMinute": 60
+      }
+    },
+    {
+      "name": "remove_task",
+      "description": "Delete a task permanently for the authenticated user",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_token": {
+            "type": "string",
+            "description": "JWT session token for authentication and user identification",
+            "format": "jwt"
+          },
+          "task_id": {
+            "type": "integer",
+            "description": "ID of the task to delete",
+            "minimum": 1
+          }
+        },
+        "required": ["session_token", "task_id"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the operation completed successfully"
+          },
+          "message": {
+            "type": "string",
+            "description": "Confirmation message on success"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if operation failed"
+          }
+        },
+        "required": ["success"]
+      },
+      "authentication": "required",
+      "rateLimit": {
+        "requestsPerMinute": 30
+      }
+    }
+  ],
+  "definitions": {
+    "Task": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique task identifier"
+        },
+        "title": {
+          "type": "string",
+          "description": "Task title",
+          "maxLength": 500
+        },
+        "description": {
+          "type": "string",
+          "description": "Task details",
+          "maxLength": 5000
+        },
+        "category": {
+          "type": "string",
+          "description": "Task category",
+          "maxLength": 100
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Completion status (true = Done, false = Pending)"
+        },
+        "user_id": {
+          "type": "integer",
+          "description": "ID of the task owner"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when task was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when task was last modified"
+        }
+      },
+      "required": ["id", "title", "description", "category", "completed", "user_id", "created_at", "updated_at"]
+    }
+  },
+  "security": {
+    "authentication": {
+      "type": "session_token",
+      "description": "All tools require valid JWT session token passed as 'session_token' parameter",
+      "validation": {
+        "endpoint": "/api/v1/validate-token",
+        "method": "POST",
+        "requiredFor": ["create_task", "toggle_status", "remove_task", "list_tasks"]
+      }
+    },
+    "authorization": {
+      "description": "Users can only access and modify their own tasks",
+      "enforcement": {
+        "level": "tool",
+        "validation": "Backend API enforces user_id filtering"
+      }
+    }
+  },
+  "errorCodes": {
+    "AUTH_INVALID": {
+      "code": 401,
+      "message": "Invalid or expired session token"
+    },
+    "AUTH_MISSING": {
+      "code": 401,
+      "message": "Session token is required"
+    },
+    "TASK_NOT_FOUND": {
+      "code": 404,
+      "message": "Task not found or does not belong to user"
+    },
+    "VALIDATION_ERROR": {
+      "code": 422,
+      "message": "Invalid input data"
+    },
+    "RATE_LIMIT_EXCEEDED": {
+      "code": 429,
+      "message": "Rate limit exceeded"
+    },
+    "INTERNAL_ERROR": {
+      "code": 500,
+      "message": "Internal server error"
+    }
+  }
+}

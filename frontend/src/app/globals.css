@@ -1,0 +1,74 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --radius-xl: 1.25rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+}
+
+:root {
+  /* Using your exact Navy Blue rgb(0, 23, 107) for background */
+  --background: 0 23 107; 
+  --foreground: 0 0% 100%;
+
+  --card: 255 255 255 / 100%; /* Ensure Card defaults to pure white */
+  --card-foreground: 222 47% 11%;
+
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 48%;
+  
+  --radius: 1.25rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    /* Changed to simple background to prevent the 'invisible wall' effect */
+    background-color: rgb(var(--background));
+    color: oklch(0.98 0.02 255);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .btn-adventure {
+    background: linear-gradient(90deg, #ee2d8d 0%, #2415f4 100%);
+    box-shadow: 0 10px 25px -5px rgba(255, 77, 148, 0.35);
+    color: white;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-adventure:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(59, 130, 246, 0.45);
+  }
+
+  .hover-glow-blue:hover {
+    box-shadow: 0 0 50px -10px rgba(0, 23, 107, 0.45);
+    border-color: rgba(34, 211, 238, 0.7);
+  }
+}

@@ -1,0 +1,55 @@
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+__pycache__/
+*.egg-info/
+dist/
+build/
+*.egg
+MANIFEST
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.pytest_cache/
+*.cover
+
+
+# uv
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables - NEVER COMMIT
+.env
+.env.local
+.env.*.local
+.env.production
+
+backend/.env
+backend/.env.example
+
+frontend/.env
+frontend/.env.local
+frontend/.env.example
+
+
+mcp_server/.env
+.claude/settings.local.json
+backend/alembic.ini
+backend/todo.db
+todo.db
