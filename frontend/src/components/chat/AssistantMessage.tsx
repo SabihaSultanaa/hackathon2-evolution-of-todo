@@ -7,8 +7,8 @@ import ToolCall from './ToolCall'
 interface AssistantMessageProps {
   content: string
   timestamp: Date
-  toolCalls?: ToolCall[]
-  toolResults?: ToolCallResult[]
+  toolCalls?: any[]       // Changed from ToolCall[] to any[]
+  toolResults?: any[]    // Changed from ToolCallResult[] to any[]
 }
 
 export default function AssistantMessage({
