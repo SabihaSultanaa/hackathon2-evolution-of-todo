@@ -1,37 +1,37 @@
-/** @jsx @tslib */
+'use client'
 
 interface ToolCallProps {
-  tool: string
-  arguments: Record<string, any>
-  timestamp: Date
+  tool: string;
+  arguments: string; // This is okay in the interface definition
+  timestamp: string;
 }
 
-export default function ToolCall({ tool, arguments, timestamp }: ToolCallProps) {
+// Renamed 'arguments' to 'args' in the function below to fix the error
+export default function ToolCall({ tool, arguments: args, timestamp }: ToolCallProps) {
   const getToolDisplayName = (toolName: string): string => {
     switch (toolName) {
       case 'list_tasks':
-        return 'Retrieved tasks'
-      case 'create_task':
-        return 'Created task'
-      case 'toggle_status':
-        return 'Updated task status'
-      case 'remove_task':
-        return 'Deleted task'
+        return 'Checking tasks...';
+      case 'add_task':
+        return 'Adding new task...';
+      case 'update_task':
+        return 'Updating task...';
+      case 'delete_task':
+        return 'Deleting task...';
       default:
-        return toolName
+        return `Using tool: ${toolName}`;
     }
-  }
+  };
 
   return (
-    <div className="mt-2 text-xs">
-      <span className="font-medium text-gray-700">
-        → {getToolDisplayName(tool)}
-      </span>
-      {Object.keys(arguments).length > 0 && (
-        <span className="text-gray-500 ml-1">
-          with {Object.keys(arguments).join(', ')}
+    <div className="flex items-center gap-2 p-2 text-xs text-gray-500 italic bg-gray-50 rounded border border-dashed">
+      <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+      <span>{getToolDisplayName(tool)}</span>
+      {args && (
+        <span className="opacity-70 truncate max-w-[150px]">
+          ({typeof args === 'string' ? args : JSON.stringify(args)})
         </span>
       )}
     </div>
-  )
+  );
 }
