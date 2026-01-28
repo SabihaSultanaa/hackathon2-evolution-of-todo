@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-agent-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-ai-agent
+  template:
+    metadata:
+      labels:
+        app: todo-ai-agent
+    spec:
+      containers:
+      - name: todo-ai-agent
+        image: todo-ai-agent:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8001
+        env:
+        - name: OPENAI_API_KEY
+          value: "your_openai_key_here"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-agent-service
+spec:
+  selector:
+    app: todo-ai-agent
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8001
+  type: ClusterIP

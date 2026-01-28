@@ -53,3 +53,32 @@ mcp_server/.env
 backend/alembic.ini
 backend/todo.db
 todo.db
+
+# Kubernetes Secrets
+secrets.yaml
+*-secrets.yaml
+.env
+.env.local
+
+# Helm Local dependencies
+charts/*.tgz
+/todo-chart/charts/
+
+# Minikube/Docker local data
+.minikube
+.docker
+# Kubernetes Secrets (CRITICAL)
+todo-chart/templates/secrets.yaml
+secrets.yaml
+
+# Environment Files
+.env
+.env.local
+backend/.env
+frontend/.env.local
+ai_agent/.env
+
+# Python & Node sensitive files
+__pycache__/
+node_modules/
+.next/
