@@ -27,7 +27,7 @@ app = FastAPI(
 # We use "*" for origins during the hackathon to ensure no connection is blocked
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://your-production-frontend.com"], 
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -82,3 +82,7 @@ def root():
         "docs": "/docs",
         "health": "/health"
     }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

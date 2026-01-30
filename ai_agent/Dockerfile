@@ -1,17 +1,27 @@
+# Use Python slim image
 FROM python:3.12-slim
 
-RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-
+# Set working directory
 WORKDIR /app
+
+# Install dependencies directly
+RUN pip install --no-cache-dir \
+    fastapi==0.115.6 \
+    uvicorn==0.34.0 \
+    openai==1.59.5 \
+    python-dotenv==1.0.1 \
+    pydantic==2.10.5 \
+    httpx==0.28.1
+
+# Copy application code
+COPY . /app/ai_agent
+
+# Set Python path so ai_agent module can be found
 ENV PYTHONPATH=/app
 
-# Install requirements
-RUN uv pip install --system psycopg2-binary openai fastapi uvicorn python-dotenv
+# Expose port
+EXPOSE 8001
 
-# Copy the ai_agent code into a folder named ai_agent
-COPY . /app/ai_agent/
-RUN touch /app/ai_agent/__init__.py
-
-# Start the FastAPI server
-CMD ["uvicorn", "ai_agent.main:app", "--host", "0.0.0.0", "--port", "8001"]
+# Start the server from the ai_agent directory
+WORKDIR /app/ai_agent
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]

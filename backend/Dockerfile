@@ -1,21 +1,26 @@
+# Use Python slim image
 FROM python:3.12-slim
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
+
+# Copy uv binary from official image
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
+# Set working directory
 WORKDIR /app
-ENV PYTHONPATH=/app
 
 # Copy dependency files
-COPY backend/pyproject.toml backend/uv.lock ./
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies
 RUN uv pip install --system -r pyproject.toml
 
-# Copy both folders into the container correctly
-COPY backend /app/app
-COPY ai_agent /app/ai_agent
+# Copy application code to /app (not /app/app)
+COPY . /app
 
-# Create the missing __init__ file just in case
-RUN touch /app/ai_agent/__init__.py
+# Expose port
+EXPOSE 8000
 
 # Start the server
-CMD ["python", "-c", "import time; while True: time.sleep(3600)"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
